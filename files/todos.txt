@@ -3,3 +3,4 @@ Clean
 Work
 Cook
 Dance
+Mastering python
