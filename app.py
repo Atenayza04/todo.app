@@ -38,7 +38,7 @@ from time import strftime  # this a standard module
 print(functionsapp1)
 #          month day, year hour:minute      %m shows the number of the month, for example 05    %b -> name of the month, for example April
 now = strftime("%b %d, %Y %H:%M")
-print("The time is below: ")
+print("This is time below.")
 print("it's", now)
 print(dir(functionsapp1))
 
