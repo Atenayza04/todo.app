@@ -41,6 +41,7 @@ now = strftime("%b %d, %Y %H:%M")
 print("This is time below.")
 print("it's", now)
 print(dir(functionsapp1))
+print()
 
 
 while True:
@@ -68,7 +69,6 @@ while True:
 		else:
 			for index, item in enumerate(todos):
 				print(f"{index + 1}.{item.strip("\n")}")  # f-string
-				# print("{}.{}".format(index + 1, item))  # format
 				# print(index + 1, ".", item, sep="")
 			# if we had wrote print(index, item) outside this for loop, we would get the last (index, item).
 
@@ -79,7 +79,7 @@ while True:
 			number = int(user_action[5:])
 
 			if number < len(todos):
-				todos = get_todos(filepath="todos.txt")
+				todos = get_todos(filepath="files/todos.txt")
 
 				new = input("Enter the new todo: ").capitalize()
 				todos[number - 1] = new + "\n"
@@ -104,7 +104,7 @@ while True:
 			index = number - 1
 			todo_to_remove = todos[index].strip("\n")  # if you execute the code on the line below, you'll see that todo_to_remove actually had a \n at the end of it
 			# so when we print(F"Todo {todo_to_remove} was removed from your list successfully."), it showed sth like this Todo Clean
-			#  was removed from your list successfully.
+			#   was removed from your list successfully.
 			# print(repr(todo_to_remove))
 
 			todos.pop(index)  # pop
