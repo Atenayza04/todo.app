@@ -24,8 +24,8 @@ list_box = FSG.Listbox(values=func.get_todos(),
                        size=(45, 10))
 
 layout = [[label],
-          [input_box, add_button, edit_button, complete_button],
-          [list_box, exit_button]]
+          [input_box, add_button, complete_button],
+          [list_box, exit_button, edit_button]]
 
 window = FSG.Window("My To-Do App",
                     layout=layout,
@@ -35,9 +35,12 @@ window = FSG.Window("My To-Do App",
 print()
 while True:  # while loop keeps the window open, otherwise with only one time pressing Add or Edit, the window would disappear
     event, values = window.read()  # because window.read() returns sth, we wanted to store it in a variable
-    print(1, event)  # window.read() is a tuple for example ('Add', {'todo': 'Play', 'todos': [Jump]})
+    print(1, event)  # window.read() is a tuple for example ('Add', {'todo': 'Play', 'todos': ['Jump\n']})
     print(2, values)  # its first item is the label of the button
     print(3, values["todo"])
+    print()
+    # 'todo' corresponds to the value of the input box
+    # 'todos' is the key for the list box
     match event:
         case "Add":
             todos = func.get_todos()  # again because this function returns us an output, we had to store it
@@ -52,17 +55,21 @@ while True:  # while loop keeps the window open, otherwise with only one time pr
             index = todos.index(todo_to_edit)
             todos[index] = new_todo
             func.write_todos(todos)
-            window["todos"].update(values=todos)
+            window["todos"].update(values=todos)  # update is a method of listbox
         case "Complete":
             todo_to_complete = values["todos"][0]
             todos = func.get_todos()
-            todos.remove(todo_to_complete)
+            todos.remove(todo_to_complete)  # in remove method, you have to specify the exact item, not the index
             func.write_todos(todos)
-            window()
-        # case FSG.WINDOW_CLOSED:
+            window["todos"].update(values=todos)  # values is the list of the items
+            window["todo"].update(value="")
+        case "Exit":
+            break
         case "todos":
             window["todo"].update(value=values["todos"][0])
-        case "Exit":
+
+
+        case FSG.WINDOW_CLOSED:
             break  # if we had replace break with exit() function
                 # which is a builtin function, the lines below it, would never execute,
                 # so Bye would not be shown after we check the zarbedar
