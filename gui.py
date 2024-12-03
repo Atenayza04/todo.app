@@ -8,8 +8,12 @@
 
 import modules.functionsapp1 as func
 import FreeSimpleGUI as FSG
+import time
 # import PySimpleGUI as PSG
 
+FSG.theme("DarkPurple3")
+
+# clock = FSG.Text("", key="clock")
 label = FSG.Text("Type in a to-do")
 input_box = FSG.InputText(tooltip="Enter todo", key="todo")  # if we haven't wrote key="todo", it would have shown the index for example 0 or 1 for the key part of the dictionary
 
@@ -22,6 +26,7 @@ list_box = FSG.Listbox(values=func.get_todos(),
                        key="todos",
                        enable_events= True,
                        size=(45, 10))
+                       # width, height
 
 layout = [[label],
           [input_box, add_button, complete_button],
@@ -35,6 +40,7 @@ window = FSG.Window("My To-Do App",
 print()
 while True:  # while loop keeps the window open, otherwise with only one time pressing Add or Edit, the window would disappear
     event, values = window.read()  # because window.read() returns sth, we wanted to store it in a variable
+    # window["clock"].update(value=time.strftime("%b %d, %Y %H:%M"))
     print(1, event)  # window.read() is a tuple for example ('Add', {'todo': 'Play', 'todos': ['Jump\n']})
     print(2, values)  # its first item is the label of the button
     print(3, values["todo"])
@@ -42,32 +48,42 @@ while True:  # while loop keeps the window open, otherwise with only one time pr
     # 'todo' corresponds to the value of the input box
     # 'todos' is the key for the list box
     match event:
+
         case "Add":
             todos = func.get_todos()  # again because this function returns us an output, we had to store it
             new_todos = values["todo"].capitalize() + "\n"
             todos.append(new_todos)
             func.write_todos(todos)
             window["todos"].update(values=todos)
+
         case "Edit":
-            todo_to_edit = values["todos"][0]  # values["todos"] is a list with only one item, so we wrote [0] to access the string
-            new_todo = values["todo"].capitalize() + "\n"
-            todos = func.get_todos()
-            index = todos.index(todo_to_edit)
-            todos[index] = new_todo
-            func.write_todos(todos)
-            window["todos"].update(values=todos)  # update is a method of listbox
+            try:
+                todo_to_edit = values["todos"][0]  # values["todos"] is a list with only one item, so we wrote [0] to access the string
+                new_todo = values["todo"].capitalize() + "\n"
+                todos = func.get_todos()
+                index = todos.index(todo_to_edit)
+                todos[index] = new_todo
+                func.write_todos(todos)
+                window["todos"].update(values=todos)  # update is a method of listbox
+            except IndexError:
+                FSG.popup("Please select an item first.", font=("Helvetica", 15))
+
         case "Complete":
-            todo_to_complete = values["todos"][0]
-            todos = func.get_todos()
-            todos.remove(todo_to_complete)  # in remove method, you have to specify the exact item, not the index
-            func.write_todos(todos)
-            window["todos"].update(values=todos)  # values is the list of the items
-            window["todo"].update(value="")
+            try:
+                todo_to_complete = values["todos"][0]
+                todos = func.get_todos()
+                todos.remove(todo_to_complete)  # in remove method, you have to specify the exact item, not the index
+                func.write_todos(todos)
+                window["todos"].update(values=todos)  # values is the list of the items
+                window["todo"].update(value="")
+            except IndexError:
+                FSG.popup("Please select an item first.", font=("Helvetica", 15))
+
         case "Exit":
             break
+
         case "todos":
             window["todo"].update(value=values["todos"][0])
-
 
         case FSG.WINDOW_CLOSED:
             break  # if we had replace break with exit() function
